@@ -20,6 +20,6 @@ exports.decodeToken = function (req, res, next) {
       return res.status(403).send({ message: "El token no es valido" });
     }
   }
-  req.usuario = payload;
+  req.user = payload;
   next();
 };

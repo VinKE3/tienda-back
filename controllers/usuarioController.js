@@ -3,7 +3,7 @@ var bcrypt = require("bcrypt-nodejs");
 var jwt = require("../helpers/jwt");
 
 const registro_usuario_admin = async (req, res) => {
-  if (req.usuario) {
+  if (req.user) {
     let data = req.body;
     let usuarios = await Usuario.find({ email: data.email });
 
@@ -62,7 +62,16 @@ const login_usuario = async function (req, res) {
   }
 };
 
+const listar_usuario_admin = async function (req, res) {
+  if (req.user) {
+    let usuarios = await Usuario.find();
+    res.status(200).send(usuarios);
+  } else {
+  }
+};
+
 module.exports = {
   registro_usuario_admin,
   login_usuario,
+  listar_usuario_admin,
 };
