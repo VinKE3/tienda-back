@@ -11,7 +11,7 @@ api.post(
 );
 api.post("/login_usuario", usuarioController.login_usuario);
 api.get(
-  "/listar_usuario_admin",
+  "/listar_usuario_admin/:filtro?",
   authenticate.decodeToken,
   usuarioController.listar_usuario_admin
 );
