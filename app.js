@@ -11,16 +11,18 @@ var producto_router = require("./routes/producto");
 app.use(bodyparser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
 
-moongose.connect("mongodb://127.0.0.1:27017/tienda");
+moongose.connect(process.env.MONGO_URL || "mongodb://localhost:27017/tienda");
 
-moongose.connection.on(port, function () {
+moongose.connection.on("error", function (err) {
+  console.log("Error de conexion a la base de datos: " + err);
+  process.exit();
+});
+
+moongose.connection.on("open", function () {
+  console.log("Conectado a la base de datos correctamente");
   app.listen(port, function () {
     console.log("Servidor del api rest escuchando en http://localhost:" + port);
   });
-});
-
-app.listen(port, function () {
-  console.log("Server running on port " + port);
 });
 
 app.use((req, res, next) => {
