@@ -1,4 +1,5 @@
 var Producto = require("../models/producto");
+var Variedad = require("../models/variedad");
 var slugify = require("slugify");
 var fs = require("fs");
 var path = require("path");
@@ -45,7 +46,7 @@ const listar_productos_admin = async function (req, res) {
         { titulo: new RegExp(filtro, "i") },
         { categoria: new RegExp(filtro, "i") },
       ],
-    });
+    }).sort({ createdAt: -1 });
     res.status(200).send(productos);
   } else {
     res.status(500).send({ data: undefined, message: "ErrorToken" });
@@ -85,7 +86,6 @@ const actualizar_producto_admin = async function (req, res) {
     let id = req.params["id"];
 
     let productos = await Producto.find({ titulo: data.titulo });
-    console.log(productos.length);
 
     if (productos.length >= 1) {
       if (productos[0]._id == id) {
@@ -108,6 +108,7 @@ const actualizar_producto_admin = async function (req, res) {
                 categoria: data.categoria,
                 extracto: data.extracto,
                 estado: data.estado,
+                str_variedad: data.str_variedad,
                 descuento: data.descuento,
                 portada: data.portada,
               }
@@ -130,6 +131,7 @@ const actualizar_producto_admin = async function (req, res) {
                 categoria: data.categoria,
                 extracto: data.extracto,
                 estado: data.estado,
+                str_variedad: data.str_variedad,
                 descuento: data.descuento,
               }
             );
@@ -167,6 +169,7 @@ const actualizar_producto_admin = async function (req, res) {
               categoria: data.categoria,
               extracto: data.extracto,
               estado: data.estado,
+              str_variedad: data.str_variedad,
               descuento: data.descuento,
               portada: data.portada,
             }
@@ -189,6 +192,7 @@ const actualizar_producto_admin = async function (req, res) {
               categoria: data.categoria,
               extracto: data.extracto,
               estado: data.estado,
+              str_variedad: data.str_variedad,
               descuento: data.descuento,
             }
           );
@@ -205,6 +209,44 @@ const actualizar_producto_admin = async function (req, res) {
     res.status(500).send({ data: undefined, message: "ErrorToken" });
   }
 };
+const registro_variedad_producto = async (req, res) => {
+  if (req.user) {
+    let data = req.body;
+
+    let variedad = await Variedad.create(data);
+    res.status(200).send({ data: variedad });
+  } else {
+    res.status(500).send({ data: undefined, message: "ErrorToken" });
+  }
+};
+const obtener_variedades_producto = async function (req, res) {
+  if (req.user) {
+    let id = req.params["id"];
+    let variedades = await Variedad.find({ producto: id }).sort({ stock: -1 });
+    res.status(200).send(variedades);
+  } else {
+    res.status(500).send({ data: undefined, message: "ErrorToken" });
+  }
+};
+const eliminar_variedad_producto = async function (req, res) {
+  if (req.user) {
+    let id = req.params["id"];
+
+    let reg = await Variedad.findById({ _id: id });
+
+    if (reg.stock == 0) {
+      let variedad = await Variedad.findOneAndRemove({ _id: id });
+      res.status(200).send(variedad);
+    } else {
+      res.status(200).send({
+        data: undefined,
+        message: "No se puede eliminar esta variedad",
+      });
+    }
+  } else {
+    res.status(500).send({ data: undefined, message: "ErrorToken" });
+  }
+};
 
 module.exports = {
   registro_producto_admin,
@@ -212,4 +254,7 @@ module.exports = {
   obtener_portada_producto,
   obtener_producto_admin,
   actualizar_producto_admin,
+  registro_variedad_producto,
+  obtener_variedades_producto,
+  eliminar_variedad_producto,
 };
