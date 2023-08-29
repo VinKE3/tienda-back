@@ -9,6 +9,9 @@ var path = multipart({
 var path_ingreso = multipart({
   uploadDir: "./uploads/facturas",
 });
+var path_galeria = multipart({
+  uploadDir: "./uploads/galeria",
+});
 var api = express.Router();
 
 api.post(
@@ -62,5 +65,16 @@ api.post(
   "/registro_ingreso_admin",
   [authenticate.decodeToken, path_ingreso],
   productoController.registro_ingreso_admin
+);
+
+//?????????
+api.post(
+  "/subir_imagen_producto_admin",
+  [authenticate.decodeToken, path_galeria],
+  productoController.subir_imagen_producto_admin
+);
+api.get(
+  "/obtener_galeria_producto/:img",
+  productoController.obtener_galeria_producto
 );
 module.exports = api;

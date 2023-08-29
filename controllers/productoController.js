@@ -2,6 +2,7 @@ var Producto = require("../models/producto");
 var Variedad = require("../models/variedad");
 var Ingreso = require("../models/ingreso");
 var Ingreso_detalle = require("../models/ingreso_detalle");
+var Galeria = require("../models/galeria");
 var slugify = require("slugify");
 var fs = require("fs");
 var path = require("path");
@@ -345,6 +346,55 @@ const registro_ingreso_admin = async function (req, res) {
     res.status(500).send({ data: undefined, message: "ErrorToken" });
   }
 };
+const subir_imagen_producto_admin = async function (req, res) {
+  if (req.user) {
+    let data = req.body;
+
+    //REGISTRO PRODUCTO
+    var img_path = req.files.imagen.path;
+    var str_img = img_path.split("\\");
+    var str_imagen = str_img[2];
+
+    ///
+
+    data.imagen = str_imagen;
+    try {
+      let imagen = await Galeria.create(data);
+      res.status(200).send(imagen);
+    } catch (error) {
+      console.log(error);
+      res
+        .status(200)
+        .send({ data: undefined, message: "No se pudo crear el producto." });
+    }
+  } else {
+    res.status(500).send({ data: undefined, message: "ErrorToken" });
+  }
+};
+const obtener_galeria_producto = async function (req, res) {
+  let img = req.params["img"];
+
+  fs.stat("./uploads/galeria/" + img, function (err) {
+    if (err) {
+      let path_img = "./uploads/default.jpg";
+      res.status(200).sendFile(path.resolve(path_img));
+    } else {
+      let path_img = "./uploads/galeria/" + img;
+      res.status(200).sendFile(path.resolve(path_img));
+    }
+  });
+};
+
+const obtener_galeria_producto_admin = async function (req, res) {
+  if (req.user) {
+    let id = req.params["id"];
+
+    let galeria = await Galeria.find({ producto: id });
+    res.status(200).send(galeria);
+  } else {
+    res.status(500).send({ data: undefined, message: "ErrorToken" });
+  }
+};
 module.exports = {
   registro_producto_admin,
   listar_productos_admin,
@@ -356,4 +406,7 @@ module.exports = {
   eliminar_variedad_producto,
   listar_activos_productos_admin,
   registro_ingreso_admin,
+  subir_imagen_producto_admin,
+  obtener_galeria_producto,
+  obtener_galeria_producto_admin,
 };
