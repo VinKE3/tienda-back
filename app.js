@@ -1,6 +1,7 @@
 var express = require("express");
 var moongose = require("mongoose");
 var bodyparser = require("body-parser");
+require("dotenv").config();
 var port = process.env.PORT || 4201;
 var app = express();
 
@@ -11,8 +12,8 @@ var producto_router = require("./routes/producto");
 app.use(bodyparser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
 
-moongose.connect(process.env.MONGO_URL || "mongodb://localhost:27017/tienda");
-
+moongose.connect(process.env.MONGO_URL);
+moongose.createConnection(process.env.MONGO_URL);
 moongose.connection.on("error", function (err) {
   console.log("Error de conexion a la base de datos: " + err);
   process.exit();
@@ -21,7 +22,7 @@ moongose.connection.on("error", function (err) {
 moongose.connection.on("open", function () {
   console.log("Conectado a la base de datos correctamente");
   app.listen(port, function () {
-    console.log("Servidor del api rest escuchando en http://localhost:" + port);
+    console.log(process.env.MONGO_URL);
   });
 });
 
