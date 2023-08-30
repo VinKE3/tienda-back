@@ -109,6 +109,7 @@ const actualizar_producto_admin = async function (req, res) {
               {
                 titulo: data.titulo,
                 categoria: data.categoria,
+                subcategoria: data.subcategoria,
                 extracto: data.extracto,
                 estado: data.estado,
                 str_variedad: data.str_variedad,
@@ -132,6 +133,7 @@ const actualizar_producto_admin = async function (req, res) {
               {
                 titulo: data.titulo,
                 categoria: data.categoria,
+                subcategoria: data.subcategoria,
                 extracto: data.extracto,
                 estado: data.estado,
                 str_variedad: data.str_variedad,
@@ -170,6 +172,7 @@ const actualizar_producto_admin = async function (req, res) {
             {
               titulo: data.titulo,
               categoria: data.categoria,
+              subcategoria: data.subcategoria,
               extracto: data.extracto,
               estado: data.estado,
               str_variedad: data.str_variedad,
@@ -193,6 +196,7 @@ const actualizar_producto_admin = async function (req, res) {
             {
               titulo: data.titulo,
               categoria: data.categoria,
+              subcategoria: data.subcategoria,
               extracto: data.extracto,
               estado: data.estado,
               str_variedad: data.str_variedad,
@@ -384,7 +388,6 @@ const obtener_galeria_producto = async function (req, res) {
     }
   });
 };
-
 const obtener_galeria_producto_admin = async function (req, res) {
   if (req.user) {
     let id = req.params["id"];
