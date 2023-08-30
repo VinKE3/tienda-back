@@ -77,4 +77,14 @@ api.get(
   "/obtener_galeria_producto/:img",
   productoController.obtener_galeria_producto
 );
+api.get(
+  "/obtener_galeria_producto_admin/:id",
+  authenticate.decodeToken,
+  productoController.obtener_galeria_producto_admin
+);
+api.delete(
+  "/eliminar_galeria_producto_admin/:id",
+  authenticate.decodeToken,
+  productoController.eliminar_galeria_producto_admin
+);
 module.exports = api;
